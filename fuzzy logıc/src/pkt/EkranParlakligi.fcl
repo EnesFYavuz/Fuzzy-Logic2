@@ -1,0 +1,78 @@
+FUNCTION_BLOCK EkranParlakligi
+
+VAR_INPUT
+	ortam_isik_yogunlugu : REAL;
+	acik_renk_yogunlugu : REAL;
+	koyu_renk_yogunlugu : REAL;
+END_VAR
+VAR_OUTPUT
+	ekran_parlakligi : REAL;
+END_VAR
+FUZZIFY ortam_isik_yogunlugu
+	TERM cok_koyu := (-1,0)(25,1)(50,0);
+	TERM koyu := (49,0)(125,1)(200,0);
+	TERM orta := (199,0)(300,1)(400,0);
+	TERM parlak := (399,0)(700,1)(1000,0);
+	TERM cok_parlak := trape 999 1500 2001 2001;
+END_FUZZIFY
+FUZZIFY acik_renk_yogunlugu
+	TERM cok_az := (-1,0)(35,1)(70,0);
+	TERM az := (69,0)(105,1)(140,0);
+	TERM orta := (139,0)(175,1)(210,0);
+	TERM yuksek := (209,0)(245,1)(280,0);
+	TERM cok_yuksek := trape 279 315 351 351;
+END_FUZZIFY
+FUZZIFY koyu_renk_yogunlugu
+	TERM cok_yuksek := (-1,0)(35,1)(70,0);
+	TERM yuksek := (69,0)(105,1)(140,0);
+	TERM orta := (139,0)(175,1)(210,0);
+	TERM az := (209,0)(245,1)(280,0);
+	TERM cok_az := trape 279 315 351 351;
+END_FUZZIFY
+
+DEFUZZIFY ekran_parlakligi
+	TERM cok_koyu := (0,1)(250,0);
+	TERM koyu := (250,0)(375,1)(500,0);
+	TERM orta := (500,0)(625,1)(750,0);
+	TERM parlak := (750,0)(875,1)(1000,0);
+	TERM cok_parlak := trape 1000 1250 1501 1501;
+	METHOD : COG;
+END_DEFUZZIFY
+
+RULEBLOCK kuralblock1
+
+	AND : MIN;
+	ACT : MIN;
+	ACCU : MAX;
+	
+	RULE 1 : IF ortam_isik_yogunlugu IS cok_koyu AND acik_renk_yogunlugu IS cok_az AND koyu_renk_yogunlugu IS cok_yuksek THEN ekran_parlakligi IS cok_koyu;
+	RULE 2 :  IF ortam_isik_yogunlugu IS cok_koyu AND acik_renk_yogunlugu IS az AND koyu_renk_yogunlugu IS yuksek THEN ekran_parlakligi IS koyu;
+	RULE 3 : IF ortam_isik_yogunlugu IS cok_koyu AND acik_renk_yogunlugu IS orta AND koyu_renk_yogunlugu IS orta THEN ekran_parlakligi IS orta;
+	RULE 4 :  IF ortam_isik_yogunlugu IS cok_koyu AND acik_renk_yogunlugu IS yuksek AND koyu_renk_yogunlugu IS az THEN ekran_parlakligi IS parlak;
+	RULE 5 : IF ortam_isik_yogunlugu IS cok_koyu AND acik_renk_yogunlugu IS cok_yuksek AND koyu_renk_yogunlugu IS cok_az THEN ekran_parlakligi IS cok_parlak;
+	RULE 6 : IF ortam_isik_yogunlugu IS koyu AND acik_renk_yogunlugu IS cok_az AND koyu_renk_yogunlugu IS cok_yuksek THEN ekran_parlakligi IS cok_koyu;
+	RULE 7 :  IF ortam_isik_yogunlugu IS koyu AND acik_renk_yogunlugu IS az AND koyu_renk_yogunlugu IS yuksek THEN ekran_parlakligi IS koyu;
+	RULE 8 : IF ortam_isik_yogunlugu IS koyu AND acik_renk_yogunlugu IS orta AND koyu_renk_yogunlugu IS orta THEN ekran_parlakligi IS orta;
+	RULE 9 :  IF ortam_isik_yogunlugu IS koyu AND acik_renk_yogunlugu IS yuksek AND koyu_renk_yogunlugu IS az THEN ekran_parlakligi IS parlak;
+	RULE 10 : IF ortam_isik_yogunlugu IS koyu AND acik_renk_yogunlugu IS cok_yuksek AND koyu_renk_yogunlugu IS cok_az THEN ekran_parlakligi IS cok_parlak;
+	RULE 11 : IF ortam_isik_yogunlugu IS orta AND acik_renk_yogunlugu IS cok_az AND koyu_renk_yogunlugu IS cok_yuksek THEN ekran_parlakligi IS cok_koyu;
+	RULE 12 :  IF ortam_isik_yogunlugu IS orta AND acik_renk_yogunlugu IS az AND koyu_renk_yogunlugu IS yuksek THEN ekran_parlakligi IS koyu;
+	RULE 13 : IF ortam_isik_yogunlugu IS orta AND acik_renk_yogunlugu IS orta AND koyu_renk_yogunlugu IS orta THEN ekran_parlakligi IS orta;
+	RULE 14 :  IF ortam_isik_yogunlugu IS orta AND acik_renk_yogunlugu IS yuksek AND koyu_renk_yogunlugu IS az THEN ekran_parlakligi IS parlak;
+	RULE 15 : IF ortam_isik_yogunlugu IS orta AND acik_renk_yogunlugu IS cok_yuksek AND koyu_renk_yogunlugu IS cok_az THEN ekran_parlakligi IS cok_parlak;
+	RULE 16 : IF ortam_isik_yogunlugu IS parlak AND acik_renk_yogunlugu IS cok_az AND koyu_renk_yogunlugu IS cok_yuksek THEN ekran_parlakligi IS koyu;
+	RULE 17 :  IF ortam_isik_yogunlugu IS parlak AND acik_renk_yogunlugu IS az AND koyu_renk_yogunlugu IS yuksek THEN ekran_parlakligi IS orta;
+	RULE 18 : IF ortam_isik_yogunlugu IS parlak AND acik_renk_yogunlugu IS orta AND koyu_renk_yogunlugu IS orta THEN ekran_parlakligi IS parlak;
+	RULE 19 :  IF ortam_isik_yogunlugu IS parlak AND acik_renk_yogunlugu IS yuksek AND koyu_renk_yogunlugu IS az THEN ekran_parlakligi IS cok_parlak;
+	RULE 20 : IF ortam_isik_yogunlugu IS parlak AND acik_renk_yogunlugu IS cok_yuksek AND koyu_renk_yogunlugu IS cok_az THEN ekran_parlakligi IS cok_parlak;
+	RULE 21 : IF ortam_isik_yogunlugu IS cok_parlak AND acik_renk_yogunlugu IS cok_az AND koyu_renk_yogunlugu IS cok_yuksek THEN ekran_parlakligi IS orta;
+	RULE 22 :  IF ortam_isik_yogunlugu IS cok_parlak AND acik_renk_yogunlugu IS az AND koyu_renk_yogunlugu IS yuksek THEN ekran_parlakligi IS parlak;
+	RULE 23 : IF ortam_isik_yogunlugu IS cok_parlak AND acik_renk_yogunlugu IS orta AND koyu_renk_yogunlugu IS orta THEN ekran_parlakligi IS cok_parlak;
+	RULE 24 :  IF ortam_isik_yogunlugu IS cok_parlak AND acik_renk_yogunlugu IS yuksek AND koyu_renk_yogunlugu IS az THEN ekran_parlakligi IS cok_parlak;
+	RULE 25 : IF ortam_isik_yogunlugu IS cok_parlak AND acik_renk_yogunlugu IS cok_yuksek AND koyu_renk_yogunlugu IS cok_az THEN ekran_parlakligi IS cok_parlak;
+	
+
+	
+END_RULEBLOCK
+
+END_FUNCTION_BLOCK
